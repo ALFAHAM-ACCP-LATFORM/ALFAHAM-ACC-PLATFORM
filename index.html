@@ -811,6 +811,31 @@
     .cyc-page-nav{ flex-wrap:wrap; }
     .cyc-page-nav .btn-primary{ order:-1; flex:1 1 100%; }
   }
+
+  /* ==================================================================
+     مراجعة إجابات المتدرب/الضيف بعد إنهاء المثال الشامل
+     ================================================================== */
+  .cycle-result-layout{ display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap; }
+  .cycle-result-main{ flex:2; min-width:240px; }
+  .cycle-review-sidebar{ flex:1; min-width:180px; display:flex; flex-direction:column; gap:8px; background:var(--sky-50); border:1px solid var(--sky-200); border-radius:14px; padding:14px; }
+  .cycle-review-label{ font-family:'Cairo', sans-serif; font-weight:800; font-size:12.5px; color:var(--navy-900); margin-bottom:4px; text-align:center; }
+  .cycle-review-btn{
+    background:linear-gradient(150deg, var(--sky-500), var(--navy-900)); color:#fff; border:none; border-radius:10px;
+    padding:10px 12px; font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:700; font-size:12.5px; cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .cycle-review-btn:hover{ transform:translateY(-2px); box-shadow:var(--shadow-soft); }
+  .review-wrong{ background:#fdeceb !important; border-color:var(--red-600) !important; }
+  .review-ok-badge{ color:var(--green-600); font-weight:800; font-size:11.5px; }
+  .review-bad-badge{ color:var(--red-600); font-weight:800; font-size:11.5px; }
+  .review-journal-entry{ background:var(--sky-50); border:1px solid var(--sky-200); border-radius:12px; padding:10px 14px; margin-bottom:10px; font-family:'IBM Plex Sans Arabic', sans-serif; font-size:12.5px; }
+  .review-entry-head{ display:flex; justify-content:space-between; align-items:center; font-weight:800; color:var(--navy-900); margin-bottom:6px; }
+  .review-note-text{ color:var(--ink-600); font-size:11.5px; margin-top:4px; }
+  .review-row{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; background:var(--sky-50); border:1px solid var(--sky-200); border-radius:10px; padding:8px 12px; margin-bottom:8px; font-family:'IBM Plex Sans Arabic', sans-serif; font-size:12.5px; }
+  .review-correct-hint{
+    background:#fff8e6; border:1px dashed #b8860b; border-radius:8px; padding:7px 10px; margin-top:6px;
+    font-family:'IBM Plex Sans Arabic', sans-serif; font-size:11.5px; color:var(--navy-900); width:100%;
+  }
 </style>
 </head>
 <body>
@@ -4831,6 +4856,161 @@ function gradePositionStage(s){
 }
 
 /* ---------- إنهاء المثال الشامل وتجميع النتيجة ---------- */
+function reviewJournalHtml(s){
+  const norm = arr => arr.filter(x=>x.value).map(x=>x.account+':'+x.value).sort().join('|');
+  const groups = {};
+  (s.journalLines||[]).forEach(r=>{
+    if(!r.account || !r.entryNo) return;
+    groups[r.entryNo] = groups[r.entryNo] || {entryNo:r.entryNo, date:r.date, debit:[], credit:[], note:r.note};
+    if(r.debit) groups[r.entryNo].debit.push({account:r.account, value:parseFloat(r.debit)||0});
+    else if(r.credit) groups[r.entryNo].credit.push({account:r.account, value:parseFloat(r.credit)||0});
+  });
+  const groupList = Object.values(groups);
+  const matchedModelIdx = new Set();
+  const sideText = (arr, label) => `<b>${label}:</b> ${arr.length ? arr.map(x=>`${nameFromCodeSafe(x.account)} (${x.value})`).join('، ') : '—'}`;
+  const rowsHtml = groupList.map(g=>{
+    const gd = norm(g.debit), gc = norm(g.credit);
+    let ok = false;
+    s.ex.entries.forEach((model,mi)=>{
+      if(ok || matchedModelIdx.has(mi)) return;
+      if(norm(model.debit)===gd && norm(model.credit)===gc && gd!=='') { ok=true; matchedModelIdx.add(mi); }
+    });
+    return `<div class="review-journal-entry ${ok?'':'review-wrong'}">
+      <div class="review-entry-head"><span>قيد رقم ${g.entryNo||'—'} — ${g.date||''}</span>${ok?'<span class="review-ok-badge">✓ صحيح</span>':'<span class="review-bad-badge">✕ غير صحيح</span>'}</div>
+      <div>${sideText(g.debit,'مدين')}</div>
+      <div>${sideText(g.credit,'دائن')}</div>
+      ${g.note?`<div class="review-note-text">${g.note}</div>`:''}
+    </div>`;
+  }).join('') || '<div class="empty-hint">لم تُدخل أي قيود</div>';
+  const missedHtml = s.ex.entries.map((model,mi)=> matchedModelIdx.has(mi) ? '' : `
+    <div class="review-correct-hint">
+      <b>القيد الصحيح:</b> ${model.text||''}<br>
+      مدين: ${model.debit.map(d=>`${nameFromCodeSafe(d.account)} (${d.value})`).join('، ')} — دائن: ${model.credit.map(c=>`${nameFromCodeSafe(c.account)} (${c.value})`).join('، ')}
+    </div>`).join('');
+  return `<div class="ef-section-title" style="margin-top:0;">دفتر اليومية — مراجعة إجابتك</div>${rowsHtml}${missedHtml?`<div class="ef-section-title">قيود صحيحة لم تُطابَق في إجابتك</div>${missedHtml}`:''}`;
+}
+function reviewLedgerHtml(s){
+  const cards = (s.ledgerPages||[]).filter(p=>p.account).map(p=>{
+    let expDebit=0, expCredit=0;
+    s.ex.entries.forEach(model=>{
+      model.debit.forEach(d=>{ if(d.account===p.account) expDebit += d.value; });
+      model.credit.forEach(c=>{ if(c.account===p.account) expCredit += c.value; });
+    });
+    const expBalance = Math.abs(expDebit-expCredit);
+    const expSide = expDebit>=expCredit ? 'مدين' : 'دائن';
+    const ok = parseFloat(p.sumDebit)===expDebit && parseFloat(p.sumCredit)===expCredit && parseFloat(p.balance)===expBalance && p.balanceSide===expSide;
+    return `<div class="ledger-t-card ${ok?'':'review-wrong'}" style="flex:1;min-width:240px;">
+      <div class="ledger-t-header"><span class="lm-acc-title" style="display:block;cursor:default;">${p.account} - ${nameFromCodeSafe(p.account)} ${ok?'<span class="review-ok-badge">✓</span>':'<span class="review-bad-badge">✕</span>'}</span></div>
+      <div class="lm-balance-box">
+        <div class="lm-bal-item"><span>مجموع المدين (إجابتك)</span><b>${p.sumDebit||0}</b></div>
+        <div class="lm-bal-item"><span>مجموع الدائن (إجابتك)</span><b>${p.sumCredit||0}</b></div>
+        <div class="lm-bal-item"><span>الرصيد (إجابتك)</span><b>${p.balance||0} ${p.balanceSide||''}</b></div>
+      </div>
+      ${ok?'':`<div class="review-correct-hint">القيم الصحيحة: مجموع المدين ${expDebit} — مجموع الدائن ${expCredit} — الرصيد ${expBalance} ${expSide}</div>`}
+    </div>`;
+  }).join('') || '<div class="empty-hint">لم تُنشئ أي صفحة أستاذ</div>';
+  return `<div class="ef-section-title" style="margin-top:0;">دفتر الأستاذ — مراجعة إجابتك</div><div style="display:flex;flex-wrap:wrap;gap:14px;">${cards}</div>`;
+}
+function reviewTrialHtml(s){
+  const map = computeCorrectBalances(s);
+  const expDebit={}, expCredit={};
+  Object.keys(map).forEach(acc=>{ if(map[acc]>0) expDebit[acc]=map[acc]; else if(map[acc]<0) expCredit[acc]=-map[acc]; });
+  const rowHtml = r=>{
+    const val = r.side==='credit' ? parseFloat(r.credit)||0 : parseFloat(r.debit)||0;
+    const exp = r.side==='credit' ? expCredit[r.account] : expDebit[r.account];
+    const ok = !!r.account && exp!==undefined && exp===val;
+    return `<div class="review-row ${ok?'':'review-wrong'}">
+      <span>${r.account?nameFromCodeSafe(r.account):'(بدون حساب)'}</span><b>${val||0}</b>
+      ${ok?'':`<div class="review-correct-hint">${exp!==undefined?`الصحيح: ${exp}`:'هذا الحساب لا ينتمي لهذا الجانب من الميزان'}</div>`}
+    </div>`;
+  };
+  const debitRows = (s.trialLines||[]).filter(r=>(r.side||'debit')==='debit' && r.account);
+  const creditRows = (s.trialLines||[]).filter(r=>r.side==='credit' && r.account);
+  return `<div class="ef-section-title" style="margin-top:0;">ميزان المراجعة — مراجعة إجابتك</div>
+    <div class="ledger-t-sides">
+      <div class="ledger-t-side"><h5>مدين</h5>${debitRows.map(rowHtml).join('')||'<div class="empty-hint">—</div>'}</div>
+      <div class="ledger-t-side"><h5>دائن</h5>${creditRows.map(rowHtml).join('')||'<div class="empty-hint">—</div>'}</div>
+    </div>`;
+}
+function reviewIncomeHtml(s){
+  const m = s.ex.cycleModel.income; const inc = s.income;
+  const norm = rows => rows.filter(r=>r.account&&r.value).map(r=>r.account+':'+r.value+':'+r.sign).sort().join('|');
+  const rowsBlock = (label, arr, modelArr)=>{
+    const ok = norm(arr)===norm(modelArr);
+    const yourText = arr.filter(r=>r.account).map(r=>`${r.sign} ${nameFromCodeSafe(r.account)}: ${r.value}`).join('، ')||'—';
+    const correctText = modelArr.filter(r=>r.account).map(r=>`${r.sign} ${nameFromCodeSafe(r.account)}: ${r.value}`).join('، ')||'—';
+    return `<div class="review-row ${ok?'':'review-wrong'}"><b>${label}</b><span>${yourText}</span>${ok?'':`<div class="review-correct-hint">الصحيح: ${correctText}</div>`}</div>`;
+  };
+  const scalarRow = (label, yours, correct)=>{
+    const ok = String(parseFloat(yours)||0)===String(correct||0);
+    return `<div class="review-row ${ok?'':'review-wrong'}"><b>${label}</b><span>${yours||0}</span>${ok?'':`<div class="review-correct-hint">الصحيح: ${correct||0}</div>`}</div>`;
+  };
+  const signRow = (label, yours, correct)=>{
+    const ok = yours===correct;
+    const lbl = v => v==='+' ? 'جمع (+)' : 'طرح (−)';
+    return `<div class="review-row ${ok?'':'review-wrong'}"><b>${label}</b><span>${lbl(yours)}</span>${ok?'':`<div class="review-correct-hint">الصحيح: ${lbl(correct)}</div>`}</div>`;
+  };
+  return `<div class="ef-section-title" style="margin-top:0;">قائمة الدخل — مراجعة إجابتك</div>
+    ${rowsBlock('صافي المبيعات', inc.netSales, m.netSales)}
+    ${rowsBlock('صافي المشتريات', inc.netPurchases, m.netPurchases)}
+    ${scalarRow('بضاعة أول المدة', inc.beginInv, m.beginInv)}
+    ${scalarRow('بضاعة آخر المدة', inc.endInv, m.endInv)}
+    ${signRow('إشارة إجمالي الربح', inc.grossSign, '-')}
+    ${rowsBlock('الإيرادات الإضافية', inc.revenues, m.revenues)}
+    ${rowsBlock('المصروفات', inc.expenses, m.expenses)}
+    ${signRow('دمج الإيرادات', inc.revSign, '+')}
+    ${signRow('دمج المصروفات', inc.expSign, '-')}`;
+}
+function reviewPositionHtml(s){
+  const m = s.ex.cycleModel.position; const pos = s.position;
+  const norm = rows => rows.filter(r=>r.account&&r.value).map(r=>r.account+':'+r.value).sort().join('|');
+  const sideBlock = (label, arr, modelArr)=>{
+    const ok = norm(arr)===norm(modelArr);
+    const yourText = arr.filter(r=>r.account).map(r=>`${nameFromCodeSafe(r.account)}: ${r.value}`).join('، ')||'—';
+    const correctText = modelArr.filter(r=>r.account).map(r=>`${nameFromCodeSafe(r.account)}: ${r.value}`).join('، ')||'—';
+    return `<div class="review-row ${ok?'':'review-wrong'}"><b>${label}</b><span>${yourText}</span>${ok?'':`<div class="review-correct-hint">الصحيح: ${correctText}</div>`}</div>`;
+  };
+  return `<div class="ef-section-title" style="margin-top:0;">المركز المالي — مراجعة إجابتك</div>
+    ${sideBlock('الأصول', pos.assets, m.assets)}
+    ${sideBlock('الالتزامات وحقوق الملكية', pos.liabEquity, m.liabEquity)}`;
+}
+function openStageReview(s, stageKey){
+  const renderers = {journal:reviewJournalHtml, ledger:reviewLedgerHtml, trial:reviewTrialHtml, income:reviewIncomeHtml, position:reviewPositionHtml};
+  const fn = renderers[stageKey]; if(!fn) return;
+  openModal(STAGE_LABELS[stageKey] + ' — مراجعة إجابتك', `
+    ${fn(s)}
+    <button class="btn btn-ghost" style="width:100%;margin-top:16px;" id="reviewBackBtn">← رجوع للنتيجة</button>`);
+  $('#modalBox').classList.add('wide');
+  $('#reviewBackBtn').addEventListener('click', ()=> renderCycleResultScreen(s));
+}
+function renderCycleResultScreen(s){
+  const stagesAttempted = Object.keys(s.results);
+  let correct=0, wrong=0;
+  stagesAttempted.forEach(k=>{ correct += s.results[k].correct; wrong += s.results[k].wrong; });
+  const total = correct+wrong; const pct = total>0 ? Math.round(correct/total*100) : 0;
+  $('#modalBox').classList.remove('wide');
+  $('#modalBox').innerHTML = `
+    <h3>نتيجة المثال الشامل</h3>
+    <div class="cycle-result-layout">
+      <div class="cycle-result-main">
+        <div style="text-align:center;margin:10px 0 18px;">
+          <div style="font-family:Cairo;font-weight:900;font-size:40px;color:${pct>=50?'var(--green-600)':'var(--red-600)'};">${pct}%</div>
+          <div style="font-family:'IBM Plex Sans Arabic';font-size:12.5px;color:var(--ink-600);">${correct} إجابة صحيحة من أصل ${total} عبر ${stagesAttempted.length} مرحلة</div>
+        </div>
+        ${stagesAttempted.map(k=>`<div class="result-line ${s.results[k].wrong===0?'ok':'bad'}"><span>${STAGE_LABELS[k]}</span><span>${s.results[k].correct}/${s.results[k].correct+s.results[k].wrong}</span></div>`).join('')}
+        <button class="btn btn-primary" style="width:100%;margin-top:16px;" id="cycleCloseBtn">إغلاق</button>
+      </div>
+      <div class="cycle-review-sidebar">
+        <div class="cycle-review-label">مراجعة إجاباتك سجلاً سجلاً</div>
+        ${stagesAttempted.map(k=>`<button type="button" class="cycle-review-btn" data-review="${k}">${STAGE_LABELS[k]}</button>`).join('')}
+      </div>
+    </div>`;
+  $('#cycleCloseBtn').addEventListener('click', ()=>{
+    const role = s.role; cycleSession=null; closeModal();
+    if(role==='guest') renderGuestShell(); else renderTraineeShell();
+  });
+  $all('[data-review]', $('#modalBox')).forEach(b=> b.addEventListener('click', ()=> openStageReview(s, b.dataset.review)));
+}
 function finishCycle(s){
   removeCycleContextPanel();
   const stagesAttempted = Object.keys(s.results);
@@ -4844,19 +5024,7 @@ function finishCycle(s){
     income: s.income, position: s.position
   };
   state.solutions.push({id:uid(), name:person.name, type:s.role, exercise:s.ex.title, date:todayStr(), correct, wrong, reviewed:false, chat:[], identifier, cycleData});
-  const total = correct+wrong; const pct = total>0 ? Math.round(correct/total*100) : 0;
-  $('#modalBox').innerHTML = `
-    <h3>نتيجة المثال الشامل</h3>
-    <div style="text-align:center;margin:10px 0 18px;">
-      <div style="font-family:Cairo;font-weight:900;font-size:40px;color:${pct>=50?'var(--green-600)':'var(--red-600)'};">${pct}%</div>
-      <div style="font-family:'IBM Plex Sans Arabic';font-size:12.5px;color:var(--ink-600);">${correct} إجابة صحيحة من أصل ${total} عبر ${stagesAttempted.length} مرحلة</div>
-    </div>
-    ${stagesAttempted.map(k=>`<div class="result-line ${s.results[k].wrong===0?'ok':'bad'}"><span>${STAGE_LABELS[k]}</span><span>${s.results[k].correct}/${s.results[k].correct+s.results[k].wrong}</span></div>`).join('')}
-    <button class="btn btn-primary" style="width:100%;margin-top:16px;" id="cycleCloseBtn">إغلاق</button>`;
-  $('#cycleCloseBtn').addEventListener('click', ()=>{
-    const role = s.role; cycleSession=null; closeModal();
-    if(role==='guest') renderGuestShell(); else renderTraineeShell();
-  });
+  renderCycleResultScreen(s);
 }
 
 /* ==================================================================
