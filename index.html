@@ -3083,6 +3083,81 @@ function renderSolutionsPanel(body){
     openSolutionDetail(state.solutions.find(s=>s.id===b.dataset.open), draw);
   });
 }
+function nameFromCodeSafe(code){
+  try{ return (typeof nameFromCode==='function') ? nameFromCode(code) : ''; }catch(e){ return ''; }
+}
+function solutionLedgerPageHtml(p){
+  const title = p.account ? `${p.account} - ${nameFromCodeSafe(p.account)}` : '(بدون حساب)';
+  const sideHtml = rows => (rows||[]).length ? rows.map(r=>`<div class="entry-line"><span>${r.account?nameFromCodeSafe(r.account):''}</span><b>${r.value||0}</b></div>`).join('') : '<div class="empty-hint">—</div>';
+  return `
+    <div class="ledger-t-card" style="flex:1;min-width:240px;">
+      <div class="ledger-t-header"><span class="lm-acc-title" style="display:block;cursor:default;">${title}</span></div>
+      <div class="ledger-t-sides">
+        <div class="ledger-t-side"><h5>مدين</h5>${sideHtml(p.debitRows)}</div>
+        <div class="ledger-t-side"><h5>دائن</h5>${sideHtml(p.creditRows)}</div>
+      </div>
+      <div class="lm-balance-box">
+        <div class="lm-bal-item"><span>مجموع المدين</span><b>${p.sumDebit||0}</b></div>
+        <div class="lm-bal-item"><span>مجموع الدائن</span><b>${p.sumCredit||0}</b></div>
+        <div class="lm-bal-item"><span>الرصيد</span><b>${p.balance||0} ${p.balanceSide||''}</b></div>
+      </div>
+    </div>`;
+}
+function solutionSignedRowsHtml(arr, label){
+  if(!arr || !arr.some(r=>r.account)) return '';
+  return `<div class="kv"><b>${label}</b><span>${arr.filter(r=>r.account).map(r=>`${r.sign||'+'} ${nameFromCodeSafe(r.account)}: ${r.value||0}`).join('، ')}</span></div>`;
+}
+function renderSolutionAnswerHtml(s){
+  if(s.cycleData){
+    const cd = s.cycleData;
+    let html = '';
+    if(cd.journalLines && cd.journalLines.some(r=>r.account || r.debit || r.credit)){
+      html += `<div class="ef-section-title" style="margin-top:16px;">دفتر اليومية</div>
+        <div style="overflow-x:auto;"><table class="data-table journal-table"><thead><tr><th>رقم القيد</th><th>التاريخ</th><th>الحساب</th><th>مدين</th><th>دائن</th><th>البيان</th></tr></thead>
+        <tbody>${cd.journalLines.map(r=>`<tr><td>${r.entryNo||''}</td><td>${r.date||''}</td><td>${r.account?r.account+' - '+nameFromCodeSafe(r.account):''}</td><td>${r.debit||''}</td><td>${r.credit||''}</td><td>${r.note||''}</td></tr>`).join('')}</tbody></table></div>`;
+    }
+    if(cd.ledgerPages && cd.ledgerPages.length){
+      html += `<div class="ef-section-title">دفتر الأستاذ</div>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;">${cd.ledgerPages.map(solutionLedgerPageHtml).join('')}</div>`;
+    }
+    if(cd.trialLines && cd.trialLines.some(r=>r.account)){
+      html += `<div class="ef-section-title">ميزان المراجعة</div>
+        <table class="data-table journal-table"><thead><tr><th>الحساب</th><th>مدين</th><th>دائن</th></tr></thead>
+        <tbody>${cd.trialLines.filter(r=>r.account).map(r=>`<tr><td>${r.account+' - '+nameFromCodeSafe(r.account)}</td><td>${r.debit||''}</td><td>${r.credit||''}</td></tr>`).join('')}</tbody></table>`;
+    }
+    if(cd.income && [cd.income.netSales,cd.income.netPurchases,cd.income.revenues,cd.income.expenses].some(a=>a&&a.some(r=>r.account))){
+      const inc = cd.income;
+      html += `<div class="ef-section-title">قائمة الدخل</div>
+        ${solutionSignedRowsHtml(inc.netSales,'صافي المبيعات')}
+        ${solutionSignedRowsHtml(inc.netPurchases,'صافي المشتريات')}
+        <div class="kv"><b>بضاعة أول المدة</b><span>${inc.beginInv||0}</span></div>
+        <div class="kv"><b>بضاعة آخر المدة</b><span>${inc.endInv||0}</span></div>
+        <div class="kv"><b>إشارة إجمالي الربح</b><span>${inc.grossSign||'+'}</span></div>
+        ${solutionSignedRowsHtml(inc.revenues,'الإيرادات الإضافية')}
+        ${solutionSignedRowsHtml(inc.expenses,'المصروفات')}
+        <div class="kv"><b>دمج الإيرادات</b><span>${inc.revSign||'+'}</span></div>
+        <div class="kv"><b>دمج المصروفات</b><span>${inc.expSign||'-'}</span></div>`;
+    }
+    if(cd.position && ((cd.position.assets&&cd.position.assets.some(r=>r.account)) || (cd.position.liabEquity&&cd.position.liabEquity.some(r=>r.account)))){
+      const pos = cd.position;
+      const side = arr => arr && arr.length ? arr.filter(r=>r.account).map(r=>`<div class="kv"><b>${nameFromCodeSafe(r.account)}</b><span>${r.value||0}</span></div>`).join('') : '<div class="empty-hint">—</div>';
+      html += `<div class="ef-section-title">المركز المالي</div>
+        <div class="form-row">
+          <div style="flex:1;"><h5>الأصول</h5>${side(pos.assets)}</div>
+          <div style="flex:1;"><h5>الالتزامات وحقوق الملكية</h5>${side(pos.liabEquity)}</div>
+        </div>`;
+    }
+    return html || '<div class="empty-hint">لم تُحفظ تفاصيل لهذا الحل</div>';
+  }
+  if(s.submitted){
+    const sub = s.submitted;
+    if(sub.type==='tf') return `<div class="kv"><b>إجابته</b><span>${sub.chosen?'صح':'خطأ'}</span></div>`;
+    if(sub.type==='mcq') return `<div class="kv"><b>الخيار المُختار</b><span>${sub.chosenText || ('رقم '+(sub.chosenIndex+1))}</span></div>`;
+    if(sub.type==='blank') return (sub.answers||[]).map((a,i)=>`<div class="kv"><b>الفراغ ${i+1}</b><span>${a||'—'}</span></div>`).join('');
+    if(sub.type==='journal') return (sub.entries||[]).map((en,i)=>`<div class="kv"><b>القيد ${i+1}</b><span>مدين: ${(en.dRows||[]).filter(r=>r.account).map(r=>nameFromCodeSafe(r.account)+' '+r.value).join('، ')||'—'} | دائن: ${(en.cRows||[]).filter(r=>r.account).map(r=>nameFromCodeSafe(r.account)+' '+r.value).join('، ')||'—'}</span></div>`).join('');
+  }
+  return '<div class="empty-hint">لم تُحفظ تفاصيل لهذا الحل (أُرسل قبل تفعيل هذه الميزة)</div>';
+}
 function openSolutionDetail(s, refresh){
   const draft = buildReviewMessage(s.correct, s.wrong);
   openModal(`تفاصيل حل: ${s.name}`, `
@@ -3090,6 +3165,7 @@ function openSolutionDetail(s, refresh){
     <div class="kv"><b>التمرين</b><span>${s.exercise}</span></div>
     <div class="kv"><b>التاريخ</b><span>${s.date}</span></div>
     <div class="kv"><b>النتيجة</b><span>${s.correct} صحيح — ${s.wrong} خطأ</span></div>
+    ${renderSolutionAnswerHtml(s)}
     <div class="field" style="margin-top:14px;"><label>رسالة المراجعة (قابلة للتعديل قبل الإرسال)</label><textarea id="reviewMsg" rows="5">${draft}</textarea></div>
     <div class="row-actions" style="margin-bottom:16px;">
       <button class="btn btn-gold btn-small" id="markReviewedBtn" ${s.reviewed?'disabled':''}>${s.reviewed?'تمت المراجعة ✓':'تمت المراجعة'}</button>
@@ -3102,6 +3178,7 @@ function openSolutionDetail(s, refresh){
     </div>
     <button class="btn btn-ghost" style="width:100%;margin-top:14px;" onclick="closeModal()">إغلاق</button>
   `);
+  $('#modalBox').classList.add('wide');
   $('#markReviewedBtn').addEventListener('click', ()=>{ s.reviewed=true; refresh(); closeModal(); showToast('تم وضع علامة "تمت المراجعة"'); });
   $('#sendMsgBtn').addEventListener('click', ()=>{
     const msg = $('#reviewMsg').value.trim(); if(!msg) return;
@@ -3639,27 +3716,29 @@ function bindExerciseSolve(ex, role){
     $all('[data-tf]', box).forEach(b=> b.addEventListener('click', ()=>{
       const ans = b.dataset.tf==='true';
       const ok = ans===ex.correct;
-      finishExercise(ex, role, ok?1:0, ok?0:1, [{label:'إجابتك', ok}]);
+      finishExercise(ex, role, ok?1:0, ok?0:1, [{label:'إجابتك', ok}], {type:'tf', chosen:ans});
     }));
   } else if(ex.type==='mcq'){
     $('#mcqSubmitBtn', box).addEventListener('click', ()=>{
       const checked = box.querySelector('input[name=mcqSolve]:checked');
       if(!checked){ showToast('اختر إجابة أولًا'); return; }
-      const ok = parseInt(checked.value)===ex.correctIndex;
-      finishExercise(ex, role, ok?1:0, ok?0:1, [{label:'إجابتك', ok}]);
+      const chosenIndex = parseInt(checked.value);
+      const ok = chosenIndex===ex.correctIndex;
+      finishExercise(ex, role, ok?1:0, ok?0:1, [{label:'إجابتك', ok}], {type:'mcq', chosenIndex, chosenText: ex.options[chosenIndex]});
     });
   } else if(ex.type==='blank'){
     $('#blankSubmitBtn', box).addEventListener('click', ()=>{
       const inputs = $all('[data-blank]', box);
-      let correct=0, wrong=0; const details=[];
+      let correct=0, wrong=0; const details=[]; const answers=[];
       inputs.forEach((inp,i)=>{
         const val = inp.value.trim().toLowerCase();
         const exp = (ex.answers[i]||'').trim().toLowerCase();
         const ok = val!=='' && val===exp;
         ok ? correct++ : wrong++;
         details.push({label:`الفراغ ${i+1}`, ok});
+        answers.push(inp.value.trim());
       });
-      finishExercise(ex, role, correct, wrong, details);
+      finishExercise(ex, role, correct, wrong, details, {type:'blank', answers});
     });
   } else if(ex.type==='journal'){
     box.addEventListener('click', e=>{
@@ -3670,7 +3749,7 @@ function bindExerciseSolve(ex, role){
         row.insertAdjacentHTML('beforeend', `<div class="entry-line"><select data-jc-acc="${i}:${j}">${accountOptions()}</select><input type="number" placeholder="القيمة" data-jc-val="${i}:${j}"></div>`); }
     });
     $('#journalSubmitBtn', box).addEventListener('click', ()=>{
-      let correct=0, wrong=0; const details=[];
+      let correct=0, wrong=0; const details=[]; const entriesSubmitted=[];
       ex.entries.forEach((model,i)=>{
         const dRows = $all(`[data-jd-acc^="${i}:"]`, box).map((sel,j)=>({account:sel.value, value: parseFloat(box.querySelector(`[data-jd-val="${i}:${j}"]`)?.value)||0}));
         const cRows = $all(`[data-jc-acc^="${i}:"]`, box).map((sel,j)=>({account:sel.value, value: parseFloat(box.querySelector(`[data-jc-val="${i}:${j}"]`)?.value)||0}));
@@ -3678,16 +3757,17 @@ function bindExerciseSolve(ex, role){
         const ok = norm(dRows)===norm(model.debit) && norm(cRows)===norm(model.credit) && norm(model.debit)!=='';
         ok ? correct++ : wrong++;
         details.push({label:`القيد ${i+1}`, ok});
+        entriesSubmitted.push({dRows, cRows});
       });
-      finishExercise(ex, role, correct, wrong, details);
+      finishExercise(ex, role, correct, wrong, details, {type:'journal', entries:entriesSubmitted});
     });
   }
 }
 
-function finishExercise(ex, role, correct, wrong, details){
+function finishExercise(ex, role, correct, wrong, details, answerData){
   const person = role==='guest' ? state.guestSession : state.traineeSession;
   const identifier = role==='guest' ? person.phone : person.username;
-  state.solutions.push({id:uid(), name:person.name, type:role, exercise:ex.title, date:todayStr(), correct, wrong, reviewed:false, chat:[], identifier});
+  state.solutions.push({id:uid(), name:person.name, type:role, exercise:ex.title, date:todayStr(), correct, wrong, reviewed:false, chat:[], identifier, details, submitted:answerData});
   const total = correct+wrong; const pct = total>0 ? Math.round((correct/total)*100) : 0;
   $('#modalBox').innerHTML = `
     <h3>نتيجتك</h3>
@@ -4788,7 +4868,12 @@ function finishCycle(s){
   stagesAttempted.forEach(k=>{ correct += s.results[k].correct; wrong += s.results[k].wrong; });
   const person = s.role==='guest' ? state.guestSession : state.traineeSession;
   const identifier = s.role==='guest' ? person.phone : person.username;
-  state.solutions.push({id:uid(), name:person.name, type:s.role, exercise:s.ex.title, date:todayStr(), correct, wrong, reviewed:false, chat:[], identifier});
+  const cycleData = {
+    stagesAttempted,
+    journalLines: s.journalLines, ledgerPages: s.ledgerPages, trialLines: s.trialLines,
+    income: s.income, position: s.position
+  };
+  state.solutions.push({id:uid(), name:person.name, type:s.role, exercise:s.ex.title, date:todayStr(), correct, wrong, reviewed:false, chat:[], identifier, cycleData});
   const total = correct+wrong; const pct = total>0 ? Math.round(correct/total*100) : 0;
   $('#modalBox').innerHTML = `
     <h3>نتيجة المثال الشامل</h3>
