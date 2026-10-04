@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>منصة رضا الفحام التدريبية</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f4f6f9;color:#172033}
+:root{--dark:#111827;--dark2:#253348;--gold:#c99a32;--gold2:#e7bd5d;--line:#e3e7ed;--muted:#707b8b;--green:#16834f;--red:#c43d3d;--blue:#316bc6;--card:#fff}
+button,input,select,textarea{font-family:inherit}button{cursor:pointer}
+.hidden{display:none!important}
+.public{min-height:100vh;background:#f5f7fa}.public-top{padding:25px 18px;background:linear-gradient(145deg,var(--dark),var(--dark2));color:#fff;border-radius:0 0 28px 28px}
+.wrap{width:min(1080px,100%);margin:auto}.brand{display:flex;align-items:center;gap:11px}.logo{width:45px;height:45px;border:2px solid var(--gold2);border-radius:13px;display:grid;place-items:center;color:var(--gold2);font-weight:bold}.brand h1{font-size:16px;margin:0}.brand small{display:block;color:#c6cfda;font-size:10px;margin-top:4px}
+.hero{padding:35px 5px 25px}.hero h2{font-size:30px;margin:0 0 8px}.hero p{max-width:700px;color:#cbd3df;font-size:12px;line-height:2}
+.btn{border:0;border-radius:9px;padding:10px 14px;font-size:11px}.primary{background:var(--dark);color:#fff}.gold{background:var(--gold);color:#fff}.light{background:#eef1f5;color:#344054}.success{background:#e2f6ea;color:#137542}.danger{background:#fee7e7;color:#a42f2f}.outline{background:#fff;border:1px solid var(--line)}
+.public-actions{display:flex;gap:8px;flex-wrap:wrap}.public-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;padding:18px}.public-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:19px}.public-card b{display:block;margin-bottom:7px;font-size:13px}.public-card p{font-size:11px;color:var(--muted);line-height:1.8;margin:0}
+.version{text-align:center;padding:28px 0 20px;color:#9aa2ae;font-size:10px;user-select:none}.version span{cursor:pointer;padding:10px}
+
+.app{min-height:100vh}.topbar{height:68px;background:linear-gradient(120deg,var(--dark),var(--dark2));color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:20}.menu-btn{display:none;background:#ffffff18;color:#fff;border:1px solid #ffffff22;border-radius:9px;padding:8px 11px}
+.layout{display:flex;max-width:1450px;margin:auto}.side{width:255px;background:#fff;border-left:1px solid var(--line);min-height:calc(100vh - 68px);padding:15px 12px;position:sticky;top:68px;align-self:flex-start}.navtitle{font-size:10px;color:#9ca4af;padding:11px 10px 6px}.nav{width:100%;border:0;background:transparent;text-align:right;padding:11px;border-radius:10px;color:#4e5869;font-size:12px;margin:2px 0}.nav:hover,.nav.active{background:#f5ead3;color:#805d13;font-weight:bold}.nav span{margin-left:8px;font-size:16px}
+.main{flex:1;padding:24px;min-width:0}.page{display:none}.page.active{display:block}.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:20px}.page-head h2{margin:0;font-size:23px}.page-head p{margin:6px 0 0;color:var(--muted);font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px}.stat b{display:block;font-size:25px;margin-top:8px}.stat small{color:var(--muted);font-size:10px}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;margin-top:18px;padding:17px}.panel h3{font-size:14px;margin:0 0 14px}.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
+.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:680px;font-size:11px}th,td{border-bottom:1px solid var(--line);padding:11px 8px;text-align:right}th{background:#f8f9fb;color:#697384}.badge{display:inline-block;padding:5px 8px;border-radius:20px;font-size:9px}.bgreen{background:#e2f7eb;color:#137443}.byellow{background:#fff3d3;color:#8b6500}.bred{background:#fee5e5;color:#a42d2d}.bblue{background:#e5edff;color:#285eaf}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px}.filters input,.filters select{padding:10px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:11px;outline:none}.filters input{min-width:200px}.actions{display:flex;gap:5px;flex-wrap:wrap}.actions button{padding:7px 9px;border:0;border-radius:7px;font-size:9px}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field label{display:block;font-size:10px;font-weight:bold;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;outline:none;font-size:11px;background:#fff}.field textarea{min-height:90px;resize:vertical}.full{grid-column:1/-1}
+.tree ul{list-style:none;margin:0;padding-right:22px}.tree li{position:relative;padding:4px 0}.node{display:flex;align-items:center;gap:8px;padding:9px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:11px}.node.clickable{cursor:pointer}.node:hover{background:#faf7ef}.caret{width:18px;text-align:center;font-size:10px}.code{font-family:monospace;color:#8b6500;font-weight:bold}.nature{margin-right:auto;font-size:9px;color:var(--muted)}.children.collapsed{display:none}
+.exercise-path{display:flex;gap:7px;overflow:auto;padding-bottom:5px}.step{white-space:nowrap;border:1px solid var(--line);padding:9px 11px;border-radius:9px;font-size:10px;background:#fff}.step.active{background:var(--dark);color:#fff}
+.exercise-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px}.question{background:#f8f9fb;border-radius:12px;padding:14px;line-height:1.9;font-size:12px}.journal{margin-top:12px;border:1px solid var(--line);border-radius:10px;overflow:auto}.journal table{min-width:800px}.journal input,.journal select{width:100%;border:1px solid #edf0f4;border-radius:6px;padding:8px;font-size:10px}.journal input:disabled{background:#f1f3f5;color:#adb4bf}
+.add-row{margin-top:9px}.section-label{font-size:11px;font-weight:bold;margin:18px 0 8px}.result{display:none;margin-top:13px;padding:13px;border-radius:10px;font-size:11px}.result.ok{display:block;background:#e5f7ed;color:#126e3e}.result.bad{display:block;background:#fee8e8;color:#a22f2f}
+.ledger{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:11px;overflow:hidden}.ledger-side{min-width:0}.ledger-side+ .ledger-side{border-right:1px solid var(--line)}.ledger-title{background:#111827;color:#fff;padding:10px;text-align:center;font-size:11px}.ledger table{min-width:0}.totals{background:#f7f8fa;font-weight:bold}
+.trial table,.statement table{min-width:600px}.amount-input{max-width:130px}.locked{background:#f0f2f5!important;color:#aab1bc!important}
+.statement-box{border:1px solid var(--line);border-radius:11px;padding:15px;overflow:auto}.statement-row{display:flex;justify-content:space-between;gap:10px;padding:9px;border-bottom:1px solid #eef0f3;font-size:11px}.statement-row.total{font-weight:bold;background:#f7f8fa}.statement-row.indent{padding-right:28px}
+.role-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.check{border:1px solid var(--line);padding:11px;border-radius:9px;font-size:10px}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.modalbox{background:#fff;border-radius:17px;width:min(700px,100%);max-height:90vh;overflow:auto;padding:20px}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modalhead h3{margin:0;font-size:16px}.close{border:0;background:#f0f2f5;border-radius:8px;padding:7px}
+.login-modal{text-align:center}.login-modal .login-icon{font-size:35px}.login-modal input{text-align:left;direction:ltr}.login-modal .login-error{color:var(--red);font-size:10px;margin-top:9px;display:none}
+.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:11px 17px;border-radius:10px;font-size:11px;display:none;z-index:80;white-space:nowrap}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.side{position:fixed;right:-270px;top:68px;z-index:30;width:255px;transition:.25s;box-shadow:-8px 10px 25px #0002}.side.open{right:0}.menu-btn{display:block}.main{padding:15px}.role-list{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.topbar{padding:0 13px}.brand h1{font-size:13px}.main{padding:11px}.page-head{display:block}.page-head .btn{margin-top:12px}.cards{gap:8px}.stat{padding:13px}.stat b{font-size:21px}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.public-grid{grid-template-columns:1fr;padding:12px}.hero{padding:28px 5px 20px}.hero h2{font-size:23px}.ledger{grid-template-columns:1fr}.ledger-side+.ledger-side{border-right:0;border-top:1px solid var(--line)}}
+</style>
+</head>
+<body>
+
+<!-- الواجهة العامة فقط -->
+<div id="public" class="public">
+  <div class="public-top">
+    <div class="wrap">
+      <div class="brand"><div class="logo">RF</div><div><h1>رضا الفحام التعليمية</h1><small>منصة التدريب العملي للمحاسبين</small></div></div>
+      <div class="hero">
+        <h2>تعلّم المحاسبة من خلال التطبيق</h2>
+        <p>منصة تدريبية عملية تعتمد على الأمثلة والتمارين المحاسبية، من دفتر اليومية والأستاذ وميزان المراجعة إلى القوائم المالية والتدفقات النقدية.</p>
+        <div class="public-actions">
+          <button class="btn gold" onclick="openTraineeLogin()">🎓 دخول المتدرب</button>
+          <button class="btn light" onclick="openRegistration()">📝 طلب تسجيل</button>
+          <button class="btn outline" onclick="enterGuest()">👤 دخول كضيف</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="public-grid">
+      <div class="public-card"><b>🧩 أمثلة وتمارين تفاعلية</b><p>حل القيود والحسابات والقوائم بطريقة عملية مع تصحيح ودرجات وملاحظات.</p></div>
+      <div class="public-card"><b>🌳 شجرة محاسبية شخصية</b><p>لكل متدرب نسخة خاصة من الشجرة الأصلية يمكن تعديلها دون التأثير على شجرة الإدارة.</p></div>
+      <div class="public-card"><b>📊 مسارات محاسبية</b><p>اليومية، الأستاذ، ميزان المراجعة، قائمة الدخل، المركز المالي والتدفقات النقدية.</p></div>
+    </div>
+    <div class="version"><span id="version" title="نسخة النظام">Version 1.2 · 2026</span></div>
+  </div>
+</div>
+
+<!-- التطبيق الإداري لا يظهر إلا بعد الدخول السري -->
+<div id="app" class="app hidden">
+<header class="topbar">
+  <button class="menu-btn" onclick="toggleSide()">☰</button>
+  <div class="brand"><div class="logo">RF</div><div><h1>رضا الفحام التعليمية</h1><small id="roleTitle">لوحة الإدارة</small></div></div>
+  <button class="btn light" onclick="exitApp()">خروج</button>
+</header>
+<div class="layout">
+<aside class="side" id="side">
+  <div class="navtitle">الرئيسية</div>
+  <button class="nav active" data-page="dashboard" onclick="page('dashboard')"><span>⌂</span>لوحة التحكم</button>
+  <div class="navtitle">إدارة الحسابات</div>
+  <button class="nav" data-page="accounts" onclick="page('accounts')"><span>👥</span>وحدة الحسابات</button>
+  <button class="nav" data-page="employees" onclick="page('employees')"><span>🛡️</span>الموظفون والصلاحيات</button>
+  <div class="navtitle">المحتوى المحاسبي</div>
+  <button class="nav" data-page="tree" onclick="page('tree')"><span>🌳</span>الشجرة المحاسبية</button>
+  <button class="nav" data-page="exercises" onclick="page('exercises')"><span>🧩</span>الأمثلة والتمارين</button>
+</aside>
+<main class="main">
+
+<section id="dashboard" class="page active">
+ <div class="page-head"><div><h2>لوحة التحكم</h2><p>لوحة الإدارة الداخلية — غير ظاهرة للزائر.</p></div></div>
+ <div class="cards">
+  <div class="stat">🎓<b>128</b><small>متدرب</small></div><div class="stat">⏳<b>7</b><small>طلبات تسجيل</small></div><div class="stat">🧩<b>36</b><small>مثال وتمرين</small></div><div class="stat">👨‍💼<b>5</b><small>موظفون</small></div>
+ </div>
+ <div class="grid2">
+  <div class="panel"><h3>آخر طلبات التسجيل</h3><div class="table-wrap"><table><tr><th>المتدرب</th><th>المحافظة</th><th>الحالة</th><th>الإجراء</th></tr>
+  <tr><td>أحمد محمد</td><td>النجف</td><td><span class="badge byellow">قيد المراجعة</span></td><td><button class="btn success" onclick="openApproval('أحمد محمد')">موافقة</button></td></tr>
+  <tr><td>سارة علي</td><td>بغداد</td><td><span class="badge bgreen">مقبول</span></td><td>—</td></tr></table></div></div>
+  <div class="panel"><h3>حالة النظام</h3><p style="font-size:11px;line-height:2;color:var(--muted)">الواجهة الحالية Prototype. الربط مع Firebase يتم لاحقاً، مع فصل بيانات الإدارة عن بيانات كل متدرب.</p></div>
+ </div>
+</section>
+
+<section id="accounts" class="page">
+ <div class="page-head"><div><h2>وحدة الحسابات</h2><p>طلبات التسجيل والحسابات والمتدربون والضيوف والحالات.</p></div><button class="btn gold" onclick="openAddAccount()">+ إضافة حساب</button></div>
+ <div class="panel">
+  <div class="filters"><input placeholder="بحث بالاسم أو الهاتف..." oninput="filterAccounts(this.value)"><select><option>كل التصنيفات</option><option>متدربين</option><option>ضيوف</option><option>حسابات فعالة</option><option>حسابات غير فعالة</option><option>طلبات تسجيل</option></select><select><option>كل الحالات</option><option>فعال</option><option>غير فعال</option><option>معلق</option><option>مرفوض</option></select></div>
+  <div class="table-wrap"><table id="accountTable"><tr><th>الاسم</th><th>النوع</th><th>Username</th><th>الحالة</th><th>انتهاء الحساب</th><th>الإجراءات</th></tr>
+  <tr><td>أحمد محمد</td><td>طلب متدرب</td><td>—</td><td><span class="badge byellow">قيد المراجعة</span></td><td>—</td><td class="actions"><button class="success" onclick="openApproval('أحمد محمد')">موافقة</button><button class="danger" onclick="toast('تم رفض الطلب تجريبياً')">رفض</button></td></tr>
+  <tr><td>سارة علي</td><td>متدرب</td><td>SARA002</td><td><span class="badge bgreen">فعال</span></td><td>31/12/2026</td><td class="actions"><button class="light" onclick="openEditAccount('سارة علي')">إدارة</button><button class="danger" onclick="toast('الحذف يحتاج تأكيداً')">حذف</button></td></tr>
+  <tr><td>ضيف عام</td><td>ضيف</td><td>GUEST</td><td><span class="badge bblue">ضيف</span></td><td>دائم</td><td class="actions"><button class="light" onclick="toast('عرض حساب الضيف')">عرض</button></td></tr>
+  </table></div>
+ </div>
+</section>
+
+<section id="employees" class="page">
+ <div class="page-head"><div><h2>الموظفون والصلاحيات</h2><p>حسابات إدارية مستقلة مع أدوار وصلاحيات دقيقة.</p></div><button class="btn gold" onclick="openEmployee()">+ موظف جديد</button></div>
+ <div class="panel"><div class="table-wrap"><table><tr><th>الموظف</th><th>Username</th><th>الدور</th><th>الحالة</th><th>الصلاحيات</th><th>الإجراء</th></tr>
+ <tr><td>مدير النظام</td><td>admin</td><td>مدير</td><td><span class="badge bgreen">فعال</span></td><td>كل الصلاحيات</td><td><button class="btn light" onclick="openEmployee()">إدارة</button></td></tr>
+ <tr><td>محمد علي</td><td>trainer01</td><td>مدرب</td><td><span class="badge bgreen">فعال</span></td><td>التمارين + الشجرة</td><td><button class="btn light" onclick="openEmployee()">إدارة</button></td></tr></table></div></div>
+ <div class="panel"><h3>مصفوفة الصلاحيات</h3><div class="role-list"><div class="check">☑ عرض الحسابات</div><div class="check">☑ قبول الطلبات</div><div class="check">☐ حذف الحسابات</div><div class="check">☑ إدارة التمارين</div><div class="check">☑ الشجرة المحاسبية</div><div class="check">☐ إدارة الموظفين</div></div></div>
+</section>
+
+<section id="tree" class="page">
+ <div class="page-head"><div><h2>الشجرة المحاسبية الأصلية</h2><p>كل حساب أب يفتح ويغلق أبناءه بالنقر. الإضافات تظهر فعلياً داخل الشجرة.</p></div><button class="btn gold" onclick="openTreeAdd()">+ إضافة حساب</button></div>
+ <div class="panel">
+  <div class="filters"><select><option>الشجرة الرئيسية</option><option>شجرة تدريبية 2026</option></select><button class="btn light" onclick="toast('تم تغيير مستوى العرض')">مستوى العرض: تفصيلي</button></div>
+  <div id="adminTree" class="tree"></div>
+ </div>
+</section>
+
+<section id="exercises" class="page">
+ <div class="page-head"><div><h2>الأمثلة والتمارين</h2><p>إنشاء تمرين مع مسار الحل، النموذج المطلوب، الحل النموذجي وقواعد التصحيح.</p></div><button class="btn gold" onclick="openExercise()">+ إنشاء تمرين</button></div>
+ <div class="panel"><div class="filters"><input placeholder="بحث عن تمرين..."><select><option>كل الأنواع</option><option>صح وخطأ</option><option>دفتر اليومية</option><option>دفتر الأستاذ</option></select><select><option>كل المسارات</option><option>اليومية فقط</option><option>اليومية + الأستاذ</option><option>اليومية + الأستاذ + ميزان المراجعة</option><option>المسار الكامل</option></select></div>
+ <div class="table-wrap"><table><tr><th>التمرين</th><th>النوع</th><th>المسار</th><th>الدرجة</th><th>الحالة</th><th>تجربة</th></tr>
+ <tr><td>شراء بضاعة نقداً</td><td>دفتر اليومية</td><td>اليومية فقط</td><td>10</td><td><span class="badge bgreen">منشور</span></td><td><button class="btn light" onclick="page('selftest')">فتح</button></td></tr>
+ <tr><td>من عملية الشراء إلى القوائم</td><td>مسار كامل</td><td>اليومية → الأستاذ → الميزان → القوائم → التدفقات</td><td>50</td><td><span class="badge bgreen">منشور</span></td><td><button class="btn light" onclick="page('selftest')">فتح</button></td></tr></table></div></div>
+</section>
+
+<!-- واجهة اختبار متدرب/ضيف -->
+<section id="selftest" class="page">
+ <div class="page-head"><div><h2>اختبر نفسك</h2><p>واجهة تفاعلية للمتدرب أو الضيف. الحسابات مأخوذة من شجرة الحسابات الخاصة بالمستخدم.</p></div></div>
+ <div class="exercise-path"><div class="step active" onclick="showStage('journal')">1 اليومية</div><div class="step" onclick="showStage('ledger')">2 الأستاذ</div><div class="step" onclick="showStage('trial')">3 ميزان المراجعة</div><div class="step" onclick="showStage('income')">4 قائمة الدخل</div><div class="step" onclick="showStage('balance')">5 المركز المالي</div><div class="step" onclick="showStage('cashflow')">6 التدفقات النقدية</div></div>
+
+ <div id="journalStage" class="exercise-card stage">
+  <h3>دفتر اليومية</h3><div class="question"><b>السؤال:</b> في 01/10 قامت المنشأة بشراء بضاعة نقداً بمبلغ 1,000,000 دينار. سجل العملية في دفتر اليومية.</div>
+  <div class="journal"><table><thead><tr><th>رقم القيد</th><th>التاريخ</th><th>البيان</th><th>اسم الحساب</th><th>مدين</th><th>دائن</th></tr></thead><tbody id="journalBody"></tbody></table></div>
+  <div class="add-row"><button class="btn light" onclick="addJournalRow()">+ إضافة سطر</button><button class="btn gold" onclick="checkJournal()">تصحيح اليومية</button></div><div id="journalResult" class="result"></div>
+ </div>
+
+ <div id="ledgerStage" class="exercise-card stage hidden">
+  <h3>دفتر الأستاذ</h3><div class="filters"><select id="ledgerAccount" onchange="renderLedger()"></select><input id="ledgerSearch" placeholder="أو ابحث عن حساب..." oninput="searchSelect('ledgerAccount',this.value)"></div>
+  <div class="ledger"><div class="ledger-side"><div class="ledger-title">الجانب المدين</div><div id="ledgerDebit"></div></div><div class="ledger-side"><div class="ledger-title">الجانب الدائن</div><div id="ledgerCredit"></div></div></div>
+  <div class="panel" style="margin-top:12px"><b style="font-size:11px">النتيجة:</b> مجموع المدين <strong id="ld">0</strong> | مجموع الدائن <strong id="lc">0</strong> | الرصيد <strong id="lb">0</strong></div>
+ </div>
+
+ <div id="trialStage" class="exercise-card stage hidden">
+  <h3>ميزان المراجعة</h3><div class="filters"><button class="btn light" onclick="setTrialMode('balances')">بالأرصدة</button><button class="btn light" onclick="setTrialMode('totals')">بالمجاميع</button><span id="trialModeLabel" class="badge bblue">بالأرصدة</span></div>
+  <div class="trial table-wrap"><table><thead><tr><th>اسم الحساب</th><th>مدين</th><th>دائن</th></tr></thead><tbody id="trialBody"></tbody><tfoot><tr><th>المجموع</th><th id="trialDebit">0</th><th id="trialCredit">0</th></tr></tfoot></table></div>
+ </div>
+
+ <div id="incomeStage" class="exercise-card stage hidden">
+  <h3>قائمة الدخل</h3><div class="filters"><button class="btn light" onclick="renderIncome('periodic')">جرد دوري</button><button class="btn light" onclick="renderIncome('perpetual')">جرد مستمر</button><span id="incomeMode" class="badge bblue">جرد دوري</span></div>
+  <div id="incomeBox" class="statement-box"></div>
+ </div>
+
+ <div id="balanceStage" class="exercise-card stage hidden">
+  <h3>قائمة المركز المالي</h3><div class="filters"><button class="btn light" onclick="renderBalance('list')">نموذج قائمة</button><button class="btn light" onclick="renderBalance('T')">نموذج حرف T</button><span id="balanceMode" class="badge bblue">نموذج قائمة</span></div>
+  <div id="balanceBox" class="statement-box"></div>
+ </div>
+
+ <div id="cashflowStage" class="exercise-card stage hidden">
+  <h3>قائمة التدفقات النقدية</h3><div class="question">أدخل أو اختر بنود التدفقات النقدية، وسيتم تصنيفها ضمن الأنشطة التشغيلية والاستثمارية والتمويلية.</div>
+  <div class="statement-box" style="margin-top:12px"><div class="statement-row"><b>الأنشطة التشغيلية</b><input class="amount-input" value="0" type="number"></div><div class="statement-row"><b>الأنشطة الاستثمارية</b><input class="amount-input" value="0" type="number"></div><div class="statement-row"><b>الأنشطة التمويلية</b><input class="amount-input" value="0" type="number"></div><div class="statement-row total"><b>صافي التغير في النقدية</b><strong>0</strong></div></div>
+ </div>
+</section>
+</main></div></div>
+
+<div class="modal" id="modal"><div class="modalbox"><div class="modalhead"><h3 id="modalTitle">إدارة</h3><button class="close" onclick="closeModal()">✕</button></div><div id="modalContent"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const accounts=[
+ {id:'1',code:'1',name:'الأصول',nature:'مدين',children:[
+  {id:'11',code:'11',name:'الأصول المتداولة',nature:'مدين',children:[
+   {id:'111',code:'111',name:'الصندوق',nature:'مدين',children:[]},
+   {id:'112',code:'112',name:'المصارف',nature:'مدين',children:[]},
+   {id:'113',code:'113',name:'العملاء',nature:'مدين',children:[]}
+  ]},
+  {id:'12',code:'12',name:'الأصول غير المتداولة',nature:'مدين',children:[
+   {id:'121',code:'121',name:'الأراضي',nature:'مدين',children:[]},
+   {id:'122',code:'122',name:'المباني',nature:'مدين',children:[]},
+   {id:'123',code:'123',name:'السيارات',nature:'مدين',children:[]}
+  ]}
+ ]},
+ {id:'2',code:'2',name:'الالتزامات',nature:'دائن',children:[
+  {id:'21',code:'21',name:'الموردون',nature:'دائن',children:[]}
+ ]},
+ {id:'3',code:'3',name:'حقوق الملكية',nature:'دائن',children:[]},
+ {id:'4',code:'4',name:'الإيرادات',nature:'دائن',children:[]},
+ {id:'5',code:'5',name:'المصروفات',nature:'مدين',children:[]}
+];
+let collapsed=new Set(), traineeRows=[], trialMode='balances', clickVersion=0;
+
+function renderTree(containerId='adminTree'){
+ const root=document.getElementById(containerId); if(!root)return; root.innerHTML='';
+ const ul=document.createElement('ul');
+ function branch(items,parent){
+  items.forEach(a=>{
+   const li=document.createElement('li');
+   const node=document.createElement('div'); node.className='node clickable';
+   const has=a.children&&a.children.length; const isOpen=!collapsed.has(a.id);
+   node.innerHTML=`<span class="caret">${has?(isOpen?'▼':'▶'):''}</span><span class="code">${a.code}</span><b>${a.name}</b><span class="nature">${a.nature}</span>`;
+   node.onclick=()=>{if(has){collapsed.has(a.id)?collapsed.delete(a.id):collapsed.add(a.id);renderTree(containerId)}};
+   li.appendChild(node);
+   if(has){const child=document.createElement('div');child.className='children '+(isOpen?'':'collapsed');const childUl=document.createElement('ul');branch(a.children,childUl);child.appendChild(childUl);li.appendChild(child)}
+   parent.appendChild(li);
+  });
+ }
+ branch(accounts,ul);root.appendChild(ul);
+}
+function flatten(arr,out=[]){arr.forEach(a=>{out.push(a);if(a.children)flatten(a.children,out)});return out}
+function accountOptions(){return flatten(accounts).filter(a=>a.id!=='1'&&a.id!=='2'&&a.id!=='3'&&a.id!=='4'&&a.id!=='5')}
+function accountSelectHTML(cls='accountSelect'){
+ const opts=accountOptions().map(a=>`<option value="${a.id}">${a.code} — ${a.name}</option>`).join('');
+ return `<select class="${cls}"><option value="">اختر الحساب أو ابحث...</option>${opts}</select>`;
+}
+function setupJournal(){
+ const body=document.getElementById('journalBody');body.innerHTML='';addJournalRow();addJournalRow();
+}
+function addJournalRow(){
+ const tr=document.createElement('tr'); const n=document.querySelectorAll('#journalBody tr').length+1;
+ tr.innerHTML=`<td><input value="${n}" class="entryNo"></td><td><input type="date" value="2026-10-01"></td><td><input placeholder="بيان العملية"></td><td>${accountSelectHTML()}</td><td><input class="debit" type="number" min="0" placeholder="0"></td><td><input class="credit" type="number" min="0" placeholder="0"></td>`;
+ const d=tr.querySelector('.debit'),c=tr.querySelector('.credit');d.addEventListener('input',()=>{c.disabled=d.value!==''&&Number(d.value)>0;c.classList.toggle('locked',c.disabled)});c.addEventListener('input',()=>{d.disabled=c.value!==''&&Number(c.value)>0;d.classList.toggle('locked',d.disabled)});
+ document.getElementById('journalBody').appendChild(tr);
+}
+function checkJournal(){
+ const rows=[...document.querySelectorAll('#journalBody tr')],used=rows.filter(r=>r.querySelector('.accountSelect').value),debit=rows.reduce((s,r)=>s+(Number(r.querySelector('.debit').value)||0),0),credit=rows.reduce((s,r)=>s+(Number(r.querySelector('.credit').value)||0),0),res=document.getElementById('journalResult');
+ const names=used.map(r=>r.querySelector('.accountSelect').value);
+ const ok=used.length>=2 && debit===1000000 && credit===1000000 && names.includes('123') && names.includes('111');
+ res.className='result '+(ok?'ok':'bad');
+ res.innerHTML=ok?'<b>✓ الحل صحيح</b><br>10 / 10 — تم تسجيل السيارة/البضاعة والصندوق بصورة متوازنة.':'<b>✕ يحتاج إلى مراجعة</b><br>تأكد من اختيار الحسابات الصحيحة وأن مجموع المدين يساوي مجموع الدائن.';
+}
+function showStage(name){
+ document.querySelectorAll('.stage').forEach(x=>x.classList.add('hidden'));document.getElementById(name+'Stage').classList.remove('hidden');
+ document.querySelectorAll('.step').forEach((x,i)=>x.classList.toggle('active',['journal','ledger','trial','income','balance','cashflow'][i]===name));
+ if(name==='ledger')renderLedger();if(name==='trial')renderTrial();if(name==='income')renderIncome('periodic');if(name==='balance')renderBalance('list');
+}
+function renderLedger(){
+ const sel=document.getElementById('ledgerAccount'),all=accountOptions();if(!sel.options.length)sel.innerHTML=all.map(a=>`<option value="${a.id}">${a.code} — ${a.name}</option>`).join('');
+ const chosen=sel.value||'111';const rows=[...document.querySelectorAll('#journalBody tr')].filter(r=>r.querySelector('.accountSelect').value===chosen);
+ let debit=0,credit=0;const make=(side)=>rows.map(r=>{const d=Number(r.querySelector('.debit').value)||0,c=Number(r.querySelector('.credit').value)||0;if(side==='d')debit+=d;else credit+=c;return `<tr><td>${side==='d'?d:c}</td><td>${r.querySelector('.accountSelect').selectedOptions[0]?.text||'—'}</td><td>${r.querySelector('.entryNo').value}</td><td>${r.querySelector('input[type=date]').value}</td></tr>`}).join('');
+ document.getElementById('ledgerDebit').innerHTML=`<table><tr><th>مدين</th><th>الحساب المقابل</th><th>رقم</th><th>تاريخ</th></tr>${make('d')||'<tr><td colspan="4">لا توجد حركات</td></tr>'}</table>`;
+ document.getElementById('ledgerCredit').innerHTML=`<table><tr><th>دائن</th><th>الحساب المقابل</th><th>رقم</th><th>تاريخ</th></tr>${make('c')||'<tr><td colspan="4">لا توجد حركات</td></tr>'}</table>`;
+ document.getElementById('ld').textContent=debit.toLocaleString();document.getElementById('lc').textContent=credit.toLocaleString();document.getElementById('lb').textContent=Math.abs(debit-credit).toLocaleString();
+}
+function searchSelect(id,q){const s=document.getElementById(id),v=q.toLowerCase();for(const o of s.options)o.hidden=!!v&&!o.text.toLowerCase().includes(v);if([...s.options].some(o=>!o.hidden&&o.value))s.value=[...s.options].find(o=>!o.hidden&&o.value).value;renderLedger()}
+function renderTrial(){
+ const body=document.getElementById('trialBody');body.innerHTML='';
+ accountOptions().slice(0,8).forEach(a=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${a.code} — ${a.name}</td><td><input class="amount-input trialD" type="number" min="0"></td><td><input class="amount-input trialC" type="number" min="0"></td>`;const d=tr.querySelector('.trialD'),c=tr.querySelector('.trialC');if(trialMode==='balances'){d.oninput=()=>{if(Number(d.value)>0){c.value='';c.disabled=true;c.classList.add('locked')}};c.oninput=()=>{if(Number(c.value)>0){d.value='';d.disabled=true;d.classList.add('locked')}}}body.appendChild(tr)});
+ updateTrial();
+}
+function updateTrial(){let d=0,c=0;document.querySelectorAll('.trialD').forEach(x=>d+=Number(x.value)||0);document.querySelectorAll('.trialC').forEach(x=>c+=Number(x.value)||0);document.getElementById('trialDebit').textContent=d.toLocaleString();document.getElementById('trialCredit').textContent=c.toLocaleString()}
+function setTrialMode(m){trialMode=m;document.getElementById('trialModeLabel').textContent=m==='balances'?'بالأرصدة':'بالمجاميع';renderTrial()}
+function renderIncome(mode){
+ document.getElementById('incomeMode').textContent=mode==='periodic'?'جرد دوري':'جرد مستمر';
+ const box=document.getElementById('incomeBox');
+ if(mode==='periodic')box.innerHTML=`<div class="statement-row"><span>صافي المبيعات</span><input class="amount-input" value="5000000" type="number"></div><div class="statement-row"><span>بضاعة أول المدة</span><input class="amount-input" value="1000000" type="number"></div><div class="statement-row"><span>صافي المشتريات</span><input class="amount-input" value="2500000" type="number"></div><div class="statement-row"><span>بضاعة آخر المدة</span><input class="amount-input" value="800000" type="number"></div><div class="statement-row total"><span>تكلفة البضاعة المباعة</span><strong>2,700,000</strong></div><div class="statement-row total"><span>إجمالي الربح</span><strong>2,300,000</strong></div><div class="statement-row"><span>الإيرادات الأخرى</span><input class="amount-input" value="100000" type="number"></div><div class="statement-row"><span>المصاريف التشغيلية</span><input class="amount-input" value="600000" type="number"></div><div class="statement-row total"><span>صافي الربح</span><strong>1,800,000</strong></div>`;
+ else box.innerHTML=`<div class="statement-row"><span>صافي المبيعات</span><input class="amount-input" value="5000000" type="number"></div><div class="statement-row"><span>كلفة البضاعة المباعة — من ميزان المراجعة</span><input class="amount-input" value="2700000" type="number"></div><div class="statement-row total"><span>إجمالي الربح</span><strong>2,300,000</strong></div><div class="statement-row"><span>الإيرادات الأخرى</span><input class="amount-input" value="100000" type="number"></div><div class="statement-row"><span>المصاريف التشغيلية</span><input class="amount-input" value="600000" type="number"></div><div class="statement-row total"><span>صافي الربح</span><strong>1,800,000</strong></div>`;
+}
+function renderBalance(mode){
+ document.getElementById('balanceMode').textContent=mode==='list'?'نموذج قائمة':'نموذج حرف T';const b=document.getElementById('balanceBox');
+ if(mode==='list')b.innerHTML=`<div class="statement-row"><b>الأصول</b><strong>8,500,000</strong></div><div class="statement-row indent">الأصول المتداولة <span>4,000,000</span></div><div class="statement-row indent">الأصول غير المتداولة <span>4,500,000</span></div><div class="statement-row"><b>الالتزامات</b><strong>2,000,000</strong></div><div class="statement-row"><b>حقوق الملكية</b><strong>6,500,000</strong></div><div class="statement-row total"><b>الالتزامات + حقوق الملكية</b><strong>8,500,000</strong></div>`;
+ else b.innerHTML=`<div class="ledger"><div class="ledger-side"><div class="ledger-title">الأصول</div><div class="statement-row">الأصول المتداولة <strong>4,000,000</strong></div><div class="statement-row">الأصول غير المتداولة <strong>4,500,000</strong></div><div class="statement-row total">المجموع <strong>8,500,000</strong></div></div><div class="ledger-side"><div class="ledger-title">الالتزامات وحقوق الملكية</div><div class="statement-row">الالتزامات <strong>2,000,000</strong></div><div class="statement-row">حقوق الملكية <strong>6,500,000</strong></div><div class="statement-row total">المجموع <strong>8,500,000</strong></div></div></div>`;
+}
+function openTraineeLogin(){document.getElementById('modalTitle').textContent='دخول المتدرب';document.getElementById('modalContent').innerHTML=`<div class="login-modal"><div class="login-icon">🎓</div><p style="font-size:11px;color:#707b8b">أدخل بيانات الحساب التي تمنحها الإدارة.</p><div class="field"><label>Username</label><input id="tu" placeholder="اسم المستخدم"></div><div class="field" style="margin-top:10px"><label>Password</label><input id="tp" type="password" placeholder="كلمة المرور"></div><button class="btn primary" style="margin-top:14px;width:100%" onclick="loginTrainee()">دخول</button></div>`;openModal()}
+function loginTrainee(){closeModal();document.getElementById('public').classList.add('hidden');document.getElementById('app').classList.remove('hidden');document.getElementById('roleTitle').textContent='واجهة المتدرب';document.querySelector('.side').classList.add('hidden');document.querySelector('.main').innerHTML=document.getElementById('selftest').outerHTML;document.querySelector('.main').querySelector('#selftest').classList.add('active');setupJournal();renderTree();showStage('journal');}
+function enterGuest(){toast('دخول الضيف يسمح بتجربة التمارين العامة.')}
+function openRegistration(){document.getElementById('modalTitle').textContent='طلب تسجيل متدرب';document.getElementById('modalContent').innerHTML=`<div class="formgrid"><div class="field"><label>الاسم الكامل</label><input placeholder="اسم المتدرب"></div><div class="field"><label>رقم الهاتف</label><input placeholder="07XXXXXXXXX"></div><div class="field"><label>المحافظة</label><select><option>النجف</option><option>بغداد</option><option>كربلاء</option><option>البصرة</option><option>أخرى</option></select></div><div class="field"><label>الاختصاص</label><input placeholder="محاسبة / إدارة / اقتصاد..."></div><div class="field full"><label>العنوان</label><input placeholder="العنوان"></div></div><button class="btn gold" style="margin-top:15px;width:100%" onclick="closeModal();toast('تم إرسال طلب التسجيل — عند ربط Firebase سيحفظ الطلب في قاعدة البيانات')">إرسال الطلب</button>`;openModal()}
+let clicks=0,clickTimer;
+document.getElementById('version').addEventListener('click',()=>{clicks++;clearTimeout(clickTimer);clickTimer=setTimeout(()=>clicks=0,900);if(clicks===3){clicks=0;openAdminLogin()}});
+function openAdminLogin(){document.getElementById('modalTitle').textContent='دخول الإدارة';document.getElementById('modalContent').innerHTML=`<div class="login-modal"><div class="login-icon">🛠️</div><p style="font-size:11px;color:#707b8b">النسخة التجريبية — بيانات الدخول الحالية: admin / admin</p><div class="field"><label>Username</label><input id="au" value="admin" dir="ltr"></div><div class="field" style="margin-top:10px"><label>Password</label><input id="ap" type="password" value="admin" dir="ltr"></div><div id="loginError" class="login-error">اسم المستخدم أو كلمة المرور غير صحيحة.</div><button class="btn primary" style="margin-top:14px;width:100%" onclick="adminLogin()">دخول لوحة الإدارة</button></div>`;openModal()}
+function adminLogin(){if(document.getElementById('au').value==='admin'&&document.getElementById('ap').value==='admin'){closeModal();document.getElementById('public').classList.add('hidden');document.getElementById('app').classList.remove('hidden');document.getElementById('side').classList.remove('hidden');document.getElementById('roleTitle').textContent='لوحة الإدارة';location.hash='admin';renderTree();page('dashboard')}else document.getElementById('loginError').style.display='block'}
+function exitApp(){location.hash='';location.reload()}
+function toggleSide(){document.getElementById('side').classList.toggle('open')}
+function page(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));const el=document.getElementById(id);if(el)el.classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.page===id));document.getElementById('side').classList.remove('open');window.scrollTo(0,0)}
+function openModal(){document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>t.style.display='none',2800)}
+function openApproval(name){document.getElementById('modalTitle').textContent='الموافقة وإنشاء حساب المتدرب';document.getElementById('modalContent').innerHTML=`<div class="formgrid"><div class="field full"><label>اسم المتدرب</label><input value="${name}" readonly></div><div class="field"><label>Username</label><input id="newUser" placeholder="يدوي أو توليد آلي"><button class="btn light" style="margin-top:6px" onclick="document.getElementById('newUser').value='TRAINEE'+Math.floor(1000+Math.random()*9000)">توليد تلقائي</button></div><div class="field"><label>Password</label><input id="newPass" placeholder="يدوي أو توليد آلي"><button class="btn light" style="margin-top:6px" onclick="document.getElementById('newPass').value=Math.random().toString(36).slice(2,10)">توليد تلقائي</button></div><div class="field"><label>من تاريخ</label><input type="date" value="2026-10-04"></div><div class="field"><label>إلى تاريخ</label><input type="date" value="2026-12-31"></div><div class="field"><label>حالة الحساب</label><select><option>فعال</option><option>غير فعال</option></select></div><div class="field"><label>نوع الحساب</label><select><option>متدرب</option><option>متدرب متقدم</option></select></div></div><button class="btn gold" style="margin-top:16px;width:100%" onclick="closeModal();toast('تم إنشاء حساب المتدرب تجريبياً — سيتم حفظه في Firebase عند الربط')">موافقة وإنشاء الحساب</button>`;openModal()}
+function openAddAccount(){openApproval('متدرب جديد')}
+function openEditAccount(name){openApproval(name)}
+function openEmployee(){document.getElementById('modalTitle').textContent='إضافة / إدارة موظف';document.getElementById('modalContent').innerHTML=`<div class="formgrid"><div class="field"><label>اسم الموظف</label><input placeholder="اسم الموظف"></div><div class="field"><label>Username</label><input placeholder="username"></div><div class="field"><label>Password</label><input type="password" placeholder="password"></div><div class="field"><label>الدور</label><select><option>مدير</option><option>مدرب</option><option>موظف</option><option>مراجع</option></select></div><div class="field full"><label>الصلاحيات</label><div class="role-list"><div class="check">☑ عرض الحسابات</div><div class="check">☑ قبول الطلبات</div><div class="check">☐ حذف الحسابات</div><div class="check">☑ إدارة التمارين</div><div class="check">☑ الشجرة المحاسبية</div><div class="check">☐ إدارة الموظفين</div></div></div></div><button class="btn gold" style="margin-top:15px;width:100%" onclick="closeModal();toast('تم الحفظ تجريبياً')">حفظ</button>`;openModal()}
+function openTreeAdd(){document.getElementById('modalTitle').textContent='إضافة حساب للشجرة';document.getElementById('modalContent').innerHTML=`<div class="formgrid"><div class="field"><label>الحساب الأب</label><select id="parentSel">${accounts.map(a=>`<option value="${a.id}">${a.code} — ${a.name}</option>`).join('')}</select></div><div class="field"><label>رمز الحساب</label><input id="treeCode" placeholder="تلقائي أو يدوي"></div><div class="field"><label>اسم الحساب</label><input id="treeName" placeholder="مثال: السيارات"></div><div class="field"><label>الطبيعة</label><select id="treeNature"><option>مدين</option><option>دائن</option></select></div></div><button class="btn gold" style="margin-top:15px;width:100%" onclick="addAccountToTree()">إضافة الحساب فعلياً</button>`;openModal()}
+function addAccountToTree(){const parent=document.getElementById('parentSel').value,name=document.getElementById('treeName').value.trim(),code=document.getElementById('treeCode').value.trim()||parent+'-'+Math.floor(10+Math.random()*89),nature=document.getElementById('treeNature').value;if(!name){toast('اكتب اسم الحساب');return}function find(arr){for(const a of arr){if(a.id===parent)return a;if(a.children){const f=find(a.children);if(f)return f}}}const p=find(accounts);p.children.push({id:Date.now().toString(),code,name,nature,children:[]});closeModal();renderTree();toast('تمت إضافة الحساب إلى الشجرة')}
+function openExercise(){document.getElementById('modalTitle').textContent='إنشاء تمرين احترافي';document.getElementById('modalContent').innerHTML=`<div class="formgrid"><div class="field full"><label>عنوان التمرين</label><input placeholder="مثال: دورة محاسبية كاملة"></div><div class="field"><label>نوع التمرين</label><select><option>صح وخطأ</option><option>كتابة القيد</option><option>دفتر اليومية</option><option>دفتر الأستاذ</option><option>مسار كامل</option></select></div><div class="field"><label>الدرجة الكلية</label><input type="number" value="50"></div><div class="field full"><label>مسار التمرين</label><select><option>دفتر اليومية فقط</option><option>اليومية + الأستاذ</option><option>اليومية + الأستاذ + ميزان المراجعة</option><option>اليومية + الأستاذ + الميزان + قائمة الدخل</option><option>اليومية + الأستاذ + الميزان + القوائم المالية</option><option>المسار الكامل + التدفقات النقدية</option></select></div><div class="field"><label>نموذج ميزان المراجعة</label><select><option>بالأرصدة</option><option>بالمجاميع</option></select></div><div class="field"><label>نظام المخزون</label><select><option>جرد دوري</option><option>جرد مستمر</option></select></div><div class="field"><label>نموذج قائمة الدخل</label><select><option>قائمة</option><option>حرف T</option></select></div><div class="field"><label>نموذج المركز المالي</label><select><option>قائمة</option><option>حرف T</option></select></div><div class="field full"><label>صيغة السؤال</label><textarea placeholder="اكتب الحالة المحاسبية بالتفصيل..."></textarea></div><div class="field full"><label>الحل النموذجي وقواعد التصحيح</label><textarea placeholder="الحسابات، القيود، المبالغ، الإجابات النموذجية، الدرجات والملاحظات..."></textarea></div></div><button class="btn gold" style="margin-top:15px;width:100%" onclick="closeModal();toast('تم حفظ التمرين تجريبياً')">حفظ التمرين</button>`;openModal()}
+document.addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('input',e=>{if(e.target.classList.contains('trialD')||e.target.classList.contains('trialC'))updateTrial()});
+renderTree();setupJournal();
+</script>
+</body>
+</html>
