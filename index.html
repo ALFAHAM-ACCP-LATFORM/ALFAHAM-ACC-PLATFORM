@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAM Educational Platform | منصة رضا الفحام التدريبية للمحاسبة</title>
+  <meta name="description" content="منصة رضا الفحام التدريبية للمحاسبة - FAM Educational Platform">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <a class="brand" href="#" data-action="home" aria-label="الصفحة الرئيسية">
+        <img src="assets/fam-logo.png" alt="FAM Educational Platform">
+      </a>
+      <div class="top-actions">
+        <button class="icon-btn" data-action="notifications" title="الإشعارات">🔔<span id="notificationBadge" class="badge hidden">0</span></button>
+        <button class="ghost-btn" data-action="login">دخول</button>
+      </div>
+    </header>
+
+    <main id="mainView"></main>
+
+    <footer class="footer">
+      <span id="versionTrigger" class="version">FAM Educational Platform v1.0.0</span>
+      <span>© 2026 منصة رضا الفحام التدريبية للمحاسبة</span>
+    </footer>
+  </div>
+
+  <div id="modalRoot"></div>
+  <div id="toastRoot" class="toast-root"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
